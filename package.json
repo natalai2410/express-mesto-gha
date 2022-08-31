@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/natalai2410/express-mesto-gha#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "mongoose": "^6.5.4"
   },
   "devDependencies": {
     "eslint": "^8.2.0",
