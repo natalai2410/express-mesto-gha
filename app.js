@@ -11,8 +11,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-// Подключаем роутер user в файле app.js. Он должен срабатывать при запросе на адрес '/user'
-app.use('/user', require('./routes/user'));
+// Подключаем роутер user в файле app.js. Он должен срабатывать при запросе на адрес '/users'
+app.use('/user', require('./routes/users'));
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает

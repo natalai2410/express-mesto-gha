@@ -12,17 +12,14 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
   User.findById(req.params.id)
     .then((user) => res.status(200).send({ data: user }))
-    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 // POST /users — создаёт пользователя
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body; // получим из объекта запроса имя, описание,  аватар пользователя
-
+  const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.res.status(200).send({ data: user }))
-    // данные не записались, вернём ошибку
-    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((user) => res.status(201).send(user)).catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports = {
