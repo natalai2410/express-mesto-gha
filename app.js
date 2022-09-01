@@ -26,12 +26,22 @@ app.use('/users', userRoutes);
 app.use(bodyParser.json());
 
 // мидлвэр
+// мидлвэр
+// мидлвэр
+// мидлвэр
 app.use((req, res, next) => {
   req.user = {
     _id: '6310a76f76e68763193db148',
   };
   next();
 });
+
+
+
+
+
+
+
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
