@@ -1,19 +1,18 @@
 // импортируем модель
 const User = require('../models/user');
 
+const { VALIDATION_ERROR, NOT_FOUND_ERROR, CAST_ERROR } = require('../errors/errors');
+
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(200)
       .send({ data: users }))
     .catch((err) => {
-      if (err.code === 400) {
-        res.status(err.code)
-          .send('Переданы некорректные данные при создании пользователя');
-      } else if (err.code === 500) {
-        res.status(err.code)
-          .send('Произошла ошибка');
+      if (err.name === 'ValidationError') {
+        res.status(VALIDATION_ERROR).send('Переданы некорректные данные пользователя');
       }
+      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
     });
 };
 
@@ -23,16 +22,11 @@ const getUser = (req, res) => {
     .then((user) => res.status(200)
       .send({ data: user }))
     .catch((err) => {
-      if (err.code === 404) {
-        res.status(err.code)
-          .send('Запрашиваемый пользователь не найден');
-      } if (err.code === 400) {
-        res.status(err.code)
-          .send('Переданы некорректные данные при создании пользователя');
-      } else if (err.code === 500) {
-        res.status(err.code)
-          .send('Произошла ошибка');
+      if (err.name === 'ValidationError') {
+        res.status(VALIDATION_ERROR).send('Переданы некорректные данные при создании пользователя');
       }
+      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send('Запрашиваемый пользователь не найден'); }
+      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
     });
 };
 
@@ -44,13 +38,10 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(201).send(user))
     .catch((err) => {
-      if (err.code === 400) {
-        res.status(err.code)
-          .send('Переданы некорректные данные при создании пользователя');
-      } else if (err.code === 500) {
-        res.status(err.code)
-          .send('Произошла ошибка');
+      if (err.name === 'ValidationError') {
+        res.status(VALIDATION_ERROR).send('Переданы некорректные данные при создании пользователя');
       }
+      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
     });
 };
 
@@ -62,16 +53,11 @@ const updateUser = (req, res) => {
     .then((user) => res
       .send({ data: user }))
     .catch((err) => {
-      if (err.code === 400) {
-        res.status(err.code)
-          .send('Переданы некорректные данные при обновлении профиля');
-      } else if (err.code === 404) {
-        res.status(err.code)
-          .send('Запрашиваемый пользователь не найден');
-      } else if (err.code === 500) {
-        res.status(err.code)
-          .send('Произошла ошибка');
+      if (err.name === 'ValidationError') {
+        res.status(VALIDATION_ERROR).send('Переданы некорректные данные при  создании пользователя');
       }
+      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send('Запрашиваемый пользователь не найден'); }
+      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
     });
 };
 
@@ -83,16 +69,11 @@ const updateAvatar = (req, res) => {
     .then((user) => res
       .send({ data: user }))
     .catch((err) => {
-      if (err.code === 400) {
-        res.status(err.code)
-          .send('Переданы некорректные данные при обновлении аватара');
-      } else if (err.code === 404) {
-        res.status(err.code)
-          .send('Запрашиваемый пользователь не найден');
-      } else if (err.code === 500) {
-        res.status(err.code)
-          .send('Произошла ошибка');
+      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send('Запрашиваемый пользователь не найден'); }
+      if (err.name === 'ValidationError') {
+        res.status(VALIDATION_ERROR).send('Переданы некорректные данные при создании пользователя');
       }
+      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
     });
 };
 
