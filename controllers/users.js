@@ -10,9 +10,9 @@ const getUsers = (req, res) => {
       .send({ data: users }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(VALIDATION_ERROR).send('Переданы некорректные данные пользователя');
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' });
       }
-      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -23,10 +23,10 @@ const getUser = (req, res) => {
       .send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(VALIDATION_ERROR).send('Переданы некорректные данные при создании пользователя');
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя' });
       }
-      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send('Запрашиваемый пользователь не найден'); }
-      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
+      if (err.name === 'NotFound') { return res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемый пользователь не найден' }); }
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -39,9 +39,9 @@ const createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(VALIDATION_ERROR).send('Переданы некорректные данные при создании пользователя');
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя'});
       }
-      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -54,10 +54,10 @@ const updateUser = (req, res) => {
       .send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(VALIDATION_ERROR).send('Переданы некорректные данные при  создании пользователя');
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя ' });
       }
-      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send('Запрашиваемый пользователь не найден'); }
-      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
+      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемый пользователь не найден' }); }
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -69,11 +69,11 @@ const updateAvatar = (req, res) => {
     .then((user) => res
       .send({ data: user }))
     .catch((err) => {
-      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send('Запрашиваемый пользователь не найден'); }
       if (err.name === 'ValidationError') {
-        res.status(VALIDATION_ERROR).send('Переданы некорректные данные при создании пользователя');
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя ' });
       }
-      if (err.name === 'CastError') { res.status(CAST_ERROR).send('Произошла ошибка'); }
+      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемый  пользователь не найден' }); }
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
