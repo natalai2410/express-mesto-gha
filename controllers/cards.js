@@ -1,11 +1,13 @@
 // импортируем модель
 const Card = require('../models/card');
 
-const { VALIDATION_ERROR, NOT_FOUND_ERROR, CAST_ERROR } = require('../errors/errors');
+const {
+  VALIDATION_ERROR, NOT_FOUND_ERROR, CAST_ERROR, REQUEST_OK, CREATE_OK,
+} = require('../errors/errors');
 
 const getCards = (req, res) => {
   Card.find({})
-    .then((users) => res.status(200)
+    .then((users) => res.status(REQUEST_OK)
       .send({ data: users }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -18,7 +20,7 @@ const getCards = (req, res) => {
 const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link })
-    .then((card) => res.status(201).send(card))
+    .then((card) => res.status(CREATE_OK).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании карточки' });

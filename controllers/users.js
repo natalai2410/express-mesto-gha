@@ -1,12 +1,14 @@
 // импортируем модель
 const User = require('../models/user');
 
-const { VALIDATION_ERROR, NOT_FOUND_ERROR, CAST_ERROR } = require('../errors/errors');
+const {
+  VALIDATION_ERROR, NOT_FOUND_ERROR, CAST_ERROR, REQUEST_OK, CREATE_OK,
+} = require('../errors/errors');
 
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.status(200)
+    .then((users) => res.status(REQUEST_OK)
       .send({ data: users }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -19,7 +21,7 @@ const getUsers = (req, res) => {
 // GET /users/:userId - возвращает пользователя по _id
 const getUser = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => res.status(200)
+    .then((user) => res.status(REQUEST_OK)
       .send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -36,7 +38,7 @@ const createUser = (req, res) => {
 
   console.log(req.body);
   User.create({ name, about, avatar })
-    .then((user) => res.status(201).send(user))
+    .then((user) => res.status(CREATE_OK).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя'});
