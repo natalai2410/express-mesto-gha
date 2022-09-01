@@ -26,6 +26,5 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-
 // создаём модель и экспортируем её
 module.exports = mongoose.model('card', cardSchema);

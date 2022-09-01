@@ -33,10 +33,6 @@ app.use((req, res, next) => {
   next();
 });
 
-module.exports.createCard = (req, res) => {
-  console.log(req.user._id); // _id станет доступен
-};
-
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
   console.log(`App listening on port ${PORT}`);
