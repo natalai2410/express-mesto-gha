@@ -28,6 +28,13 @@ app.use('/users', userRoutes);
 app.use('/cards', cardRoutes);
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: '63125afd757faf9167d792fc',
+  };
+  next();
+});
+
 // app.use((req, res) => {
 //   // res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
 // });
