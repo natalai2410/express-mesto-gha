@@ -62,10 +62,25 @@ const updateUser = (req, res) => {
 };
 
 // PATCH /users/me/avatar — обновляет аватар
-const updateAvatar = (req) => {
+const updateAvatar = (req, res) => {
   const userId = req.user._id;
+
   const { avatar } = req.body;
-  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true });
+  // eslint-disable-next-line max-len
+  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
+    .then((user) => {
+      if (!user) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' });
+      }
+      return res.status(REQUEST_OK).send({
+        _id: user._id,
+        avatar,
+        name: user.name,
+        about: user.about,
+      });
+    })
+    // eslint-disable-next-line consistent-return
+    .catch(() => res.status(CAST_ERROR).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports = {
