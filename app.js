@@ -29,7 +29,7 @@ app.use('/cards', cardRoutes);
 app.use(bodyParser.json());
 
 // app.use((req, res) => {
-//   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
+//   // res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
 // });
 
 // мидлвэр
