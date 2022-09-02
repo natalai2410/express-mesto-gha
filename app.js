@@ -21,8 +21,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 // app.use('/users', require('./routes/users'));
 
 const userRoutes = require('./routes/users');
+const cardRoutes = require('./routes/cards');
 
 app.use('/users', userRoutes);
+app.use('/cards', cardRoutes);
 app.use(bodyParser.json());
 
 // мидлвэр
