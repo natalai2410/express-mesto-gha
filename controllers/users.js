@@ -66,13 +66,16 @@ const updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.params.id, { avatar })
-    .then((user) => res.status(200).send(user))
+    // eslint-disable-next-line max-len
+    .then((user) => res.status(CREATE_OK).send({
+      _id: user._id, avatar, name: user.name, about: user.about,
+    })
     // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
-      }
-    });
+      .catch((err) => {
+        if (err.name === 'ValidationError' || err.name === 'CastError') {
+          return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
+        }
+      }));
 };
 
 module.exports = {
