@@ -30,15 +30,15 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndDelete(req.params.id)
-    .then((card) => {
-      if (!card) {
-        return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена' });
-      }
-      return res.status(REQUEST_OK).send(card);
-    })
+  const { id } = req.params;
+  Card.findByIdAndDelete(id).then((card) => {
+    if (!card) {
+      return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена' });
+    }
+    return res.send(({ message: 'Карточка не найдена' }) || card);
+  })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при удалении карточки' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
