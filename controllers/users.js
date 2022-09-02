@@ -61,6 +61,20 @@ const updateUser = (req, res) => {
     });
 };
 
+const checkExist = (user, res, msg) => {
+  if (!user) {
+    return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден' });
+  }
+  return res.send((msg) || user);
+};
+
+const checkErr = (err, res) => {
+  if ((err.kind === 'ObjectId') || (err.name === 'Переданы некорректные данные')) {
+    return res.status(VALIDATION_ERROR).send({ message: 'Некорректный запрос' });
+  }
+  return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+};
+
 // PATCH /users/me/avatar — обновляет аватар
 const updateAvatar = (req, res) => {
   const userId = req.user._id;
@@ -68,27 +82,8 @@ const updateAvatar = (req, res) => {
   const { avatar } = req.body;
   // eslint-disable-next-line max-len
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' });
-      }
-      return res.status(REQUEST_OK).send({
-        _id: user._id,
-        avatar,
-        name: user.name,
-        about: user.about,
-      });
-    })
-    // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
-      }
-      if (err.name === 'CastError') {
-        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
-      }
-      res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-    });
+    .then((user) => checkExist(user, res))
+    .catch((err) => checkErr(err, res));
 };
 
 module.exports = {
