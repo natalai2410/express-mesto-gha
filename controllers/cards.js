@@ -19,7 +19,8 @@ const getCards = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-  Card.create({ name, link })
+  const owner = req.user._id;
+  Card.create({ name, link, owner })
     .then((card) => res.status(CREATE_OK).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -31,19 +32,16 @@ const createCard = (req, res) => {
 
 const deleteCard = (req, res) => {
   const { id } = req.params;
-  Card.findByIdAndDelete(id).then((card) => {
-    if (!card) {
-      return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена' });
-    }
-    return res.status(REQUEST_OK).send(card);
-  })
-    .catch((err) => {
-      if (err.name === 'NotFound') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные карточки' });
-      }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+  Card.findByIdAndRemove(id).then((card) => res.send(card))
+    .catch(() => {
+      res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
+
+// if (err.name === 'NotFound') {
+// eslint-disable-next-line max-len
+//   return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные карточки' });
+// }
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
 const likeCard = (req, res) => {

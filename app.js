@@ -32,7 +32,6 @@ app.use((req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
 });
 
-
 // мидлвэр
 app.use((req, res, next) => {
   req.user = {
