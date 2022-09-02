@@ -37,7 +37,12 @@ const deleteCard = (req, res) => {
     }
     return res.status(REQUEST_OK).send(card);
   })
-    .catch(() => res.status(CAST_ERROR).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
+        return res.status(VALIDATION_ERROR).send({ message: 'Некорректный запрос' });
+      }
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+    });
 };
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
@@ -47,8 +52,7 @@ const likeCard = (req, res) => {
     { id },
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
-  ).then((card) => res.status(200)
-    .send(card))
+  ).then((card) => res.status(REQUEST_OK).send(card))
     .catch((err) => {
       if (err.name === 'NotFound') {
         return res.status(NOT_FOUND_ERROR)
