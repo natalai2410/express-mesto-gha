@@ -30,18 +30,6 @@ const getUser = (req, res) => {
     // eslint-disable-next-line consistent-return
     .catch(() => res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' }));
 };
-  // User.findById(req.params.id)
-  //   .then((user) => res.status(REQUEST_OK).send(user))
-  //   .catch((err) => {
-  //     if (err.name === 'ValidationError') {
-// eslint-disable-next-line max-len
-  //       return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' });
-  //     }
-// eslint-disable-next-line max-len
-  //     if (err.message === 'NotFound') { return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' }); }
-  //     return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-  //   });
-// };
 
 // POST /users — создаёт пользователя
 const createUser = (req, res) => {
@@ -79,12 +67,16 @@ const updateAvatar = (req, res) => {
 
   User.findByIdAndUpdate(req.params.id, { avatar })
     .then((user) => res
-      .send({ data: user }))
+      .send({
+        _id: user._id,
+        avatar,
+        name: user.name,
+        about: user.about,
+      }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя ' });
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя' });
       }
-      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемый  пользователь не найден' }); }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
