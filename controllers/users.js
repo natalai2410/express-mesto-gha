@@ -56,14 +56,11 @@ const updateUser = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден' });
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
       }
       return res.send(({ message: 'Пользователь не найден' }) || user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
-      }
       if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь с указанным _id не найден' }); }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
