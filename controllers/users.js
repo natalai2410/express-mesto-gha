@@ -28,10 +28,7 @@ const getUser = (req, res) => {
       return res.status(REQUEST_OK).send(user);
     })
     // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      if (err.name === 'ValidationError') { return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' }); }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-    });
+    .catch(() => res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' }));
 };
   // User.findById(req.params.id)
   //   .then((user) => res.status(REQUEST_OK).send(user))
