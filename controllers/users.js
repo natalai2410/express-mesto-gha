@@ -61,19 +61,19 @@ const updateUser = (req, res) => {
     });
 };
 
-// const checkExist = (user, res, msg) => {
-//   if (!user) {
-//     return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден' });
-//   }
-//   return res.send((msg) || user);
-// };
+const checkExist = (user, res, msg) => {
+  if (!user) {
+    return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден' });
+  }
+  return res.send((msg) || user);
+};
 
-// const checkErr = (err, res) => {
-//   if ((err.kind === 'ObjectId') || (err.name === 'Переданы некорректные данные')) {
-//     return res.status(VALIDATION_ERROR).send({ message: 'Некорректный запрос' });
-//   }
-//   return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-// };
+const checkErr = (err, res) => {
+  if ((err.kind === 'ObjectId') || (err.name === 'Переданы некорректные данные')) {
+    return res.status(VALIDATION_ERROR).send({ message: 'Некорректный запрос' });
+  }
+  return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+};
 
 // PATCH /users/me/avatar — обновляет аватар
 const updateAvatar = (req, res) => {
@@ -86,14 +86,9 @@ const updateAvatar = (req, res) => {
       if (!user) {
         return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден' });
       }
-      return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные' });
+      return res.send(({ message: 'Переданы некорректные данные' }) || user);
     })
-    .catch((err) => {
-      if ((err.kind === 'ObjectId') || (err.name === 'Переданы некорректные данные')) {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные' });
-      }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-    });
+    .catch((err) => checkErr(err, res));
 };
 
 module.exports = {
