@@ -50,8 +50,16 @@ const createUser = (req, res) => {
 const updateUser = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.params.id, { name, about })
-    .then((user) => res.status(CREATE_OK).send(user))
+  User.findByIdAndUpdate(req.params.id, { name, about }, {
+    new: true,
+    runValidators: true,
+  })
+    .then((user) => {
+      if (!user) {
+        return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден' });
+      }
+      return res.send(({ message: 'Пользователь не найден' }) || user);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
