@@ -38,8 +38,8 @@ const deleteCard = (req, res) => {
     return res.status(REQUEST_OK).send(card);
   })
     .catch((err) => {
-      if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
-        return res.status(NOT_FOUND_ERROR).send({ message: 'Некорректный запрос' });
+      if (err.name === 'NotFound') {
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные карточки' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
