@@ -52,13 +52,12 @@ const updateUser = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.params.id, { name, about })
-    .then((user) => res
-      .send({ data: user }))
+    .then((user) => res.status(CREATE_OK).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя ' });
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
       }
-      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемый пользователь не найден' }); }
+      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь с указанным _id не найден' }); }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
