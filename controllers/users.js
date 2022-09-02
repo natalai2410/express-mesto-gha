@@ -20,17 +20,31 @@ const getUsers = (req, res) => {
 
 // GET /users/:userId - возвращает пользователя по _id
 const getUser = (req, res) => {
-  User.findById(req.params.id)
-    .then((user) => res.status(REQUEST_OK)
-      .send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя' });
+  User.findById(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' });
       }
-      if (err.name === 'NotFound') { return res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемый пользователь не найден' }); }
+      return res.status(REQUEST_OK).send(user);
+    })
+    // eslint-disable-next-line consistent-return
+    .catch((err) => {
+      if (err.name === 'ValidationError') { return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' }); }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
+  // User.findById(req.params.id)
+  //   .then((user) => res.status(REQUEST_OK).send(user))
+  //   .catch((err) => {
+  //     if (err.name === 'ValidationError') {
+// eslint-disable-next-line max-len
+  //       return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' });
+  //     }
+// eslint-disable-next-line max-len
+  //     if (err.message === 'NotFound') { return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' }); }
+  //     return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+  //   });
+// };
 
 // POST /users — создаёт пользователя
 const createUser = (req, res) => {
