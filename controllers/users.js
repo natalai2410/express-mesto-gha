@@ -82,7 +82,10 @@ const updateAvatar = (req, res) => {
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
+      }
+      if (err.name === 'CastError') {
+        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
       }
       res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
