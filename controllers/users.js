@@ -51,11 +51,12 @@ const updateUser = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.params.id, { name, about }, { new: true, runValidators: true })
+    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
       }
-      return res.send(({ message: 'Пользователь не найден' }) || user);
+      return res.status(REQUEST_OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь с указанным _id не найден' }); }

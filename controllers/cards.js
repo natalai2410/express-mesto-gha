@@ -37,7 +37,7 @@ const deleteCard = (req, res) => {
     if (!card) {
       return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена' });
     }
-    return res.res.status(REQUEST_OK).send(card);
+    return res.status(REQUEST_OK).send(card);
   })
     .catch((err) => {
       if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
