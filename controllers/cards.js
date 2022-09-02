@@ -32,16 +32,20 @@ const createCard = (req, res) => {
 
 const deleteCard = (req, res) => {
   const { id } = req.params;
-  Card.findByIdAndRemove(id).then((card) => res.send(card))
-    .catch(() => {
-      res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+
+  Card.findByIdAndDelete(id).then((card) => {
+    if (!card) {
+      return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена' });
+    }
+    return res.res.status(REQUEST_OK).send(card);
+  })
+    .catch((err) => {
+      if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
+        return res.status(VALIDATION_ERROR).send({ message: 'Некорректный запрос' });
+      }
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
-
-// if (err.name === 'NotFound') {
-// eslint-disable-next-line max-len
-//   return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные карточки' });
-// }
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
 const likeCard = (req, res) => {
