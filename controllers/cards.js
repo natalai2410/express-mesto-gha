@@ -64,7 +64,7 @@ const likeCard = (req, res) => {
     });
 };
 
-// DELETE /cards/:cardId/likes — убрать лайк с карточки
+// DELETE /cards/:cardId/likes — убрать лайк с  карточки
 const dislikeCard = (req, res) => {
   const { id } = req.params;
   Card.findByIdAndUpdate(
