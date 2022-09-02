@@ -66,18 +66,12 @@ const updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.params.id, { avatar })
-    .then((user) => res
-      .send({
-        _id: user._id,
-        avatar,
-        name: user.name,
-        about: user.about,
-      }))
+    .then((user) => res.status(200).send(user))
+    // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
       }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
