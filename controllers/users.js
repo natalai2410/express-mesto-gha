@@ -80,7 +80,12 @@ const updateAvatar = (req, res) => {
       });
     })
     // eslint-disable-next-line consistent-return
-    .catch(() => res.status(CAST_ERROR).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+      }
+      res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports = {
