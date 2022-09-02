@@ -70,6 +70,8 @@ const updateUser = (req, res) => {
 const updateAvatar = (req, res) => {
   const userId = req.user._id;
 
+  console.log(userId);
+
   const { avatar } = req.body;
   // eslint-disable-next-line max-len
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
