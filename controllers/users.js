@@ -62,20 +62,10 @@ const updateUser = (req, res) => {
 };
 
 // PATCH /users/me/avatar — обновляет аватар
-const updateAvatar = (req, res) => {
+const updateAvatar = (req) => {
+  const userId = req.user._id;
   const { avatar } = req.body;
-
-  User.findByIdAndUpdate(req.params.id, { avatar })
-    // eslint-disable-next-line max-len
-    .then((user) => res.status(CREATE_OK).send({
-      _id: user._id, avatar, name: user.name, about: user.about,
-    })
-    // eslint-disable-next-line consistent-return
-      .catch((err) => {
-        if (err.name === 'ValidationError' || err.name === 'CastError') {
-          return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
-        }
-      }));
+  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true });
 };
 
 module.exports = {
