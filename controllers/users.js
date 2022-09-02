@@ -76,9 +76,9 @@ const updateAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'Некорректный запрос' });
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара' });
       }
-      return res.status(CAST_ERROR).send({ message: 'Ошибка сервера' });
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
