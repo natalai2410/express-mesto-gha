@@ -8,8 +8,7 @@ const {
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.status(REQUEST_OK)
-      .send({ data: users }))
+    .then((users) => res.status(REQUEST_OK).send(users))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' });
@@ -27,7 +26,6 @@ const getUser = (req, res) => {
       }
       return res.status(REQUEST_OK).send(user);
     })
-    // eslint-disable-next-line consistent-return
     .catch(() => res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' }));
 };
 
