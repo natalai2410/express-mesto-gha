@@ -23,7 +23,7 @@ async function main() {
   await mongoose.connect('mongodb://localhost:27017/mestodb', {
     useNewUrlParser: true,
     useUnifiedTopology: false,
-  })
+  });
 };
 
 // Подключаем роутер user в файле app.js. Он должен срабатывать при запросе на адрес '/users'
@@ -32,16 +32,10 @@ async function main() {
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 
-app.use('/users', userRoutes);
-app.use('/cards', cardRoutes);
-app.use(bodyParser.json());
+app.use(userRoutes);
+app.use(cardRoutes);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63125afd757faf9167d792fc',
-  };
-  next();
-});
+app.use(bodyParser.json());
 
 app.use((req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
