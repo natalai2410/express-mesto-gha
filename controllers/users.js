@@ -27,7 +27,7 @@ const getUser = (req, res) => {
       return res.status(REQUEST_OK).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
