@@ -24,7 +24,7 @@ async function main() {
     useNewUrlParser: true,
     useUnifiedTopology: false,
   });
-};
+}
 
 // Подключаем роутер user в файле app.js. Он должен срабатывать при запросе на адрес '/users'
 // app.use('/users', require('./routes/users'));
