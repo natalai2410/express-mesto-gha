@@ -8,11 +8,11 @@ const {
   dislikeCard,
 } = require('../controllers/cards');
 
-cardRoutes.get('/', getCards);
-cardRoutes.post('/', createCard);
-cardRoutes.delete('/:cardId', deleteCard);
+cardRoutes.get('/cards', getCards);
+cardRoutes.post('/cards', createCard);
+cardRoutes.delete('/cards/:cardId', deleteCard);
 
-cardRoutes.put('/:cardId/likes', likeCard);
-cardRoutes.delete('/:cardId/likes', dislikeCard);
+cardRoutes.put('/cards/:cardId/likes', likeCard);
+cardRoutes.delete('/cards/:cardId/likes', dislikeCard);
 
 module.exports = cardRoutes;

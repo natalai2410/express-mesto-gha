@@ -53,7 +53,7 @@ const updateUser = (req, res) => {
 
   // console.log(`обновление  профиля ${req.body}`);
   const { _id } = req.user;
-  User.findByIdAndUpdate( _id, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(_id, { name, about }, { new: true, runValidators: true })
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
