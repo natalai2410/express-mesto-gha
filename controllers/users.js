@@ -33,11 +33,13 @@ const getUser = (req, res) => {
 
 // POST /users — создаёт пользователя
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  console.log(req.body);
+  const {
+    name, about, avatar, _id,
+  } = req.body;
 
-  console.log(req.body);
-  User.create({ name, about, avatar })
+  User.create({
+    name, about, avatar, _id,
+  })
     .then((user) => res.status(CREATE_OK).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -51,7 +53,7 @@ const createUser = (req, res) => {
 const updateUser = (req, res) => {
   const { name, about } = req.body;
 
-  console.log(`обновление  профиля ${req.body}`);
+  // console.log(`обновление  профиля ${req.body}`);
 
   User.findByIdAndUpdate(req.params.id, { name, about }, { new: true, runValidators: true })
     // eslint-disable-next-line consistent-return
