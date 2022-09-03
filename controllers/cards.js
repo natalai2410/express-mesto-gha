@@ -40,8 +40,8 @@ const deleteCard = (req, res) => {
     return res.status(REQUEST_OK).send(card);
   })
     .catch((err) => {
-      if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
-        return res.status(VALIDATION_ERROR).send({ message: 'Некорректный запрос' });
+      if (err.name === 'ValidationError') {
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные удаляемой карточки' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -54,15 +54,15 @@ const likeCard = (req, res) => {
     { id },
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
-  ).then((card) => res.status(REQUEST_OK).send(card))
+  ).then((card) => {
+    if (!card) {
+      return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена' });
+    }
+    return res.status(REQUEST_OK).send(card);
+  })
     .catch((err) => {
-      if (err.name === 'NotFound') {
-        return res.status(NOT_FOUND_ERROR)
-          .send({ message: 'Карточка с указанным _id не найдена' });
-      }
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR)
-          .send({ message: 'Переданы некорректные данные для постановки лайка' });
+        return res.status(VALIDATION_ERROR).send({ message: 'ереданы некорректные данные для постановки лайка' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -75,15 +75,15 @@ const dislikeCard = (req, res) => {
     { id },
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
-  ).then((card) => res.status(REQUEST_OK).send(card))
+  ).then((card) => {
+    if (!card) {
+      return res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена' });
+    }
+    return res.status(REQUEST_OK).send(card);
+  })
     .catch((err) => {
-      if (err.name === 'NotFound') {
-        return res.status(NOT_FOUND_ERROR)
-          .send({ message: 'Карточка с указанным _id не найдена' });
-      }
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR)
-          .send({ message: 'Переданы некорректные данные для снятия лайка' });
+        return res.status(VALIDATION_ERROR).send({ message: 'ереданы некорректные данные для снятия лайка' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });

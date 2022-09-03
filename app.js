@@ -22,7 +22,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
-// const { NOT_FOUND_ERROR } = require('./errors/errors');
+const { NOT_FOUND_ERROR } = require('./errors/errors');
 
 app.use('/users', userRoutes);
 app.use('/cards', cardRoutes);
@@ -35,9 +35,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use((req, res) => {
-//   // res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
-// });
+app.use((req, res) => {
+  res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
+});
 
 // мидлвэр
 app.use((req, res, next) => {

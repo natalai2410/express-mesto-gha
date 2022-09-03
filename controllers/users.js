@@ -54,12 +54,14 @@ const updateUser = (req, res) => {
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
-        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' });
       }
       return res.status(REQUEST_OK).send(user);
     })
     .catch((err) => {
-      if (err.name === 'NotFound') { res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь с указанным _id не найден' }); }
+      if (err.name === 'ValidationError') {
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+      }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
@@ -68,10 +70,7 @@ const updateUser = (req, res) => {
 const updateAvatar = (req, res) => {
   const userId = req.user._id;
 
-  console.log(userId);
-
   const { avatar } = req.body;
-  // eslint-disable-next-line max-len
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
@@ -86,7 +85,6 @@ const updateAvatar = (req, res) => {
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
-
 
 module.exports = {
   getUsers,
