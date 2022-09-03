@@ -7,7 +7,7 @@ const app = express();
 
 const mongoose = require('mongoose');
 
-const { NOT_FOUND_ERROR } = require('./errors/errors');
+// const { NOT_FOUND_ERROR } = require('./errors/errors');
 
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
@@ -37,9 +37,9 @@ app.use(cardRoutes);
 
 app.use(bodyParser.json());
 
-app.use((req, res) => {
-  res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
-});
+// app.use((req, res) => {
+//   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
+// });
 
 // мидлвэр
 app.use((req, res, next) => {
