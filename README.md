@@ -26,3 +26,25 @@
 
 `npm run start` — запускает сервер   
 `npm run dev` — запускает сервер с hot-reload
+
+## Настройка  окружения 
+
+npm init -y # флаг -y ответит «Да» на все вопросы по настройке package.json
+
+- Установите экспресс
+npm install express 
+
+- флаг -D установит nodemon как dev-зависимость
+npm install nodemon -D 
+
+npm install --g eslint
+npm install eslint --save-dev 
+npm install eslint-plugin-import -g
+npm install eslint-plugin-import --save-dev
+npm info "eslint-config-airbnb-base@latest" peerDependencies
+
+npx install-peerdeps --dev eslint-config-airbnb-base
+npm install eslint-config-airbnb-base
+npm install --save-dev eslint-config-airbnb-base eslint
+
+npm install body-parser
