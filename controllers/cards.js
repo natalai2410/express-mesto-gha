@@ -7,8 +7,7 @@ const {
 
 const getCards = (req, res) => {
   Card.find({})
-    .then((users) => res.status(REQUEST_OK)
-      .send({ data: users }))
+    .then((cards) => res.send(cards.map((element) => element)))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные карточки' });
@@ -19,27 +18,17 @@ const getCards = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-  // const owner = req.user._id;
+  const owner = req.user._id;
 
-  Card.create({ name, link })
-    .then(() => res.status(CREATE_OK).send())
+  Card.create({ name, link, owner })
+    .then((cards) => res.status(CREATE_OK).send(cards))
     .catch((err) => {
+      console.log(err.name);
       if (err.name === 'ValidationError') {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании карточки' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
-
-  // const card = new Card({ name, link });
-  //
-  // card.save().then(() => {
-  //   res.send(card);
-  // }).catch((err) => {
-  //   if (err.name === 'ValidationError') {
-  //     return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании карточки' });
-  //   }
-  //   return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-  // });
 };
 
 // Card.create({ name, link, owner })
