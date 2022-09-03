@@ -16,14 +16,14 @@ const cardSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  // likes: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   default: [], // по умолчанию — пустой массив (поле default);
-  // },
-  // createdAt: {
-  //   type: Date,
-  //   default: Date.now, // значение по умолчанию Date.now.
-  // },
+  likes: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: [], // по умолчанию — пустой массив (поле default);
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now, // значение по умолчанию Date.now.
+  },
 });
 
 // создаём модель и экспортируем её
