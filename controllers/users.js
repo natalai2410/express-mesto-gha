@@ -26,7 +26,12 @@ const getUser = (req, res) => {
       }
       return res.status(REQUEST_OK).send(user);
     })
-    .catch(() => res.status(CAST_ERROR).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные пользователя' });
+      }
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+    });
 };
 
 // POST /users — создаёт пользователя
