@@ -50,9 +50,8 @@ const deleteCard = (req, res) => {
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
 const likeCard = (req, res) => {
-  const { id } = req.params;
   Card.findByIdAndUpdate(
-    { id },
+    req.params.id,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   ).then((card) => {
@@ -71,9 +70,8 @@ const likeCard = (req, res) => {
 
 // DELETE /cards/:cardId/likes — убрать лайк с  карточки
 const dislikeCard = (req, res) => {
-  const { id } = req.params;
   Card.findByIdAndUpdate(
-    { id },
+    req.params.id,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   ).then((card) => {
