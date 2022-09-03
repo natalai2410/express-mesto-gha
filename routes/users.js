@@ -8,9 +8,9 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-userRoutes.get('/', getUsers);
-userRoutes.get('/:userId', getUser);
-userRoutes.post('/', createUser);
+userRoutes.get('/users', getUsers);
+userRoutes.get('/users/:userId', getUser);
+userRoutes.post('/users/', createUser);
 
 userRoutes.patch('/users/me', updateUser);
 userRoutes.patch('/users/me/avatar', updateAvatar);

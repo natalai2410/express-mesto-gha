@@ -52,8 +52,8 @@ const updateUser = (req, res) => {
   const { name, about } = req.body;
 
   // console.log(`обновление  профиля ${req.body}`);
-
-  User.findByIdAndUpdate(req.params.id, { name, about }, { new: true, runValidators: true })
+  const { _id } = req.user;
+  User.findByIdAndUpdate( _id, { name, about }, { new: true, runValidators: true })
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
@@ -71,10 +71,11 @@ const updateUser = (req, res) => {
 
 // PATCH /users/me/avatar — обновляет аватар
 const updateAvatar = (req, res) => {
-  const userId = req.user._id;
+  const { _id } = req.user;
 
   const { avatar } = req.body;
-  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
+
+  User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' });

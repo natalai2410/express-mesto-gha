@@ -16,31 +16,27 @@ async function main() {
     useNewUrlParser: true,
     useUnifiedTopology: false,
   });
+
+  // мидлвэр
+  app.use((req, res, next) => {
+    req.user = {
+      _id: '631397f2319c4c2e38ca4610',
+    };
+    next();
+  });
+
+  app.use(express.json());
+
+  app.use(userRoutes);
+  app.use(cardRoutes);
+
+  app.listen(PORT, () => {
+    // Если всё работает, консоль покажет, какой порт приложение слушает
+    console.log(`App listening on port ${PORT}`);
+  });
 }
 
 // Подключаем роутер user в файле app.js. Он должен срабатывать при запросе на адрес '/users'
 // app.use('/users', require('./routes/users'));
-
-app.use(express.json());
-
-app.use(userRoutes);
-app.use(cardRoutes);
-
-// app.use((req, res) => {
-//   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
-// });
-
-// мидлвэр
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6313350b656628b3e5aedce8',
-  };
-  next();
-});
-
-app.listen(PORT, () => {
-  // Если всё работает, консоль покажет, какой порт приложение слушает
-  console.log(`App listening on port ${PORT}`);
-});
 
 main();
