@@ -9,7 +9,7 @@ const {
 } = require('../controllers/cards');
 
 cardRoutes.get('/cards', getCards);
-cardRoutes.post('/cards', createCard);
+cardRoutes.post('/cards/', createCard);
 cardRoutes.delete('/cards/:cardId', deleteCard);
 
 cardRoutes.put('/cards/:cardId/likes', likeCard);

@@ -19,16 +19,38 @@ const getCards = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-  const owner = req.user._id;
-  Card.create({ name, link, owner })
-    .then((card) => res.status(CREATE_OK).send(card))
+  // const owner = req.user._id;
+
+  Card.create({ name, link })
+    .then(() => res.status(CREATE_OK).send())
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании карточки' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
+
+  // const card = new Card({ name, link });
+  //
+  // card.save().then(() => {
+  //   res.send(card);
+  // }).catch((err) => {
+  //   if (err.name === 'ValidationError') {
+  //     return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании карточки' });
+  //   }
+  //   return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+  // });
 };
+
+// Card.create({ name, link, owner })
+//   .then((card) => res.status(CREATE_OK).send(card))
+//   .catch((err) => {
+//     if (err.name === 'ValidationError') {
+// eslint-disable-next-line max-len
+//       return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании карточки' });
+//     }
+//     return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+//   });
 
 const deleteCard = (req, res) => {
   const { id } = req.params;

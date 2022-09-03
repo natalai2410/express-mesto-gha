@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 
-// const { NOT_FOUND_ERROR } = require('./errors/errors');
+const { NOT_FOUND_ERROR } = require('./errors/errors');
 
 const app = express();
 
@@ -29,6 +29,10 @@ async function main() {
 
   app.use(userRoutes);
   app.use(cardRoutes);
+
+  app.use((req, res) => {
+    res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
+  });
 
   app.listen(PORT, () => {
     // Если всё работает, консоль покажет, какой порт приложение слушает
