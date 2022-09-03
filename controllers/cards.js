@@ -31,16 +31,6 @@ const createCard = (req, res) => {
     });
 };
 
-// Card.create({ name, link, owner })
-//   .then((card) => res.status(CREATE_OK).send(card))
-//   .catch((err) => {
-//     if (err.name === 'ValidationError') {
-// eslint-disable-next-line max-len
-//       return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные при создании карточки' });
-//     }
-//     return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-//   });
-
 const deleteCard = (req, res) => {
   const { id } = req.params;
 
@@ -73,7 +63,7 @@ const likeCard = (req, res) => {
   })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'ереданы некорректные данные для постановки лайка' });
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные для постановки лайка' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -94,7 +84,7 @@ const dislikeCard = (req, res) => {
   })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR).send({ message: 'ереданы некорректные данные для снятия лайка' });
+        return res.status(VALIDATION_ERROR).send({ message: 'Переданы некорректные данные для снятия лайка' });
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
