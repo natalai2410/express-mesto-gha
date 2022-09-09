@@ -1,12 +1,21 @@
 const express = require('express');
+const auth = require('./middlewares/auth');
+
+const {
+  validationCreateUser,
+  validationLogin,
+} = require('./middlewares/validations');
+
+const { createUser, login } = require('./controllers/users');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
+// eslint-disable-next-line import/order
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 
-const { NOT_FOUND_ERROR } = require('./errors/errors');
+const NotFoundError = require('./errors/notFoundError');
 
 const app = express();
 
@@ -17,21 +26,19 @@ async function main() {
     useUnifiedTopology: false,
   });
 
-  // мидлвэр
-  app.use((req, res, next) => {
-    req.user = {
-      _id: '631397f2319c4c2e38ca4610',
-    };
-    next();
-  });
-
   app.use(express.json());
+
+  app.post('/signin', validationLogin, login);
+  app.post('/signup', validationCreateUser, createUser);
+
+  app.use(auth); // все роуты ниже этой строки будут защищены
 
   app.use(userRoutes);
   app.use(cardRoutes);
 
-  app.use((req, res) => {
-    res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
+  app.use((req, res, next) => {
+    next(NotFoundError('Карточка с указанным _id не найдена'));
+    // res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
   });
 
   app.listen(PORT, () => {
@@ -39,8 +46,5 @@ async function main() {
     console.log(`App listening on port ${PORT}`);
   });
 }
-
-// Подключаем роутер user в файле app.js. Он должен срабатывать при запросе на адрес '/users'
-// app.use('/users', require('./routes/users'));
 
 main();
