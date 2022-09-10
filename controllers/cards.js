@@ -39,25 +39,36 @@ const createCard = (req, res, next) => {
 // eslint-disable-next-line consistent-return
 const deleteCard = (req, res, next) => {
   const { id } = req.params;
-  const owner = req.user._id; // используем req.user
-
-  if (Сard.owner.toString() === owner) {
-    Card.findByIdAndDelete(id).then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
-      }
-      return res.status(REQUEST_OK).send(card);
+  return Card.findById(id)
+    .orFail(() => {
+      throw new NotFoundError('Карточка с указанным _id не найдена');
     })
-      .catch((err) => {
-        if ((err.name === 'ValidationError') || (err.kind === 'ObjectId')) {
-          next(new ValidationError('Переданы некорректные данные удаляемой карточки'));
-        }
-        return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-      });
-  } else {
-    // eslint-disable-next-line new-cap
-    next(new forbiddenError('В доступе отказано'));
-  }
+    .then((card) => {
+      if (card.owner.toString() === req.user._id) {
+        Card.findByIdAndRemove(id).then(() => res.status(REQUEST_OK).send(card));
+      } else {
+        next(new ValidationError('Переданы некорректные данные удаляемой карточки'));
+      }
+    })
+    .catch(next);
+
+  // if (Сard.owner.toString() === owner) {
+  //   Card.findByIdAndDelete(id).then((card) => {
+  //     if (!card) {
+  //       throw new NotFoundError('Карточка с указанным _id не найдена');
+  //     }
+  //     return res.status(REQUEST_OK).send(card);
+  //   })
+  //     .catch((err) => {
+  //       if ((err.name === 'ValidationError') || (err.kind === 'ObjectId')) {
+  //         next(new ValidationError('Переданы некорректные данные удаляемой карточки'));
+  //       }
+  //       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+  //     });
+  // } else {
+  //   // eslint-disable-next-line new-cap
+  //   next(new forbiddenError('В доступе отказано'));
+  // }
 };
 
 // PUT /cards/:cardId/likes — поставить лайк карточке

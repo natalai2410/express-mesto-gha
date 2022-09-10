@@ -7,15 +7,13 @@ const {
 } = require('./middlewares/validations');
 
 const { createUser, login } = require('./controllers/users');
+
+const routes = require('./routes');
+
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 // eslint-disable-next-line import/order
 const mongoose = require('mongoose');
-
-const userRoutes = require('./routes/users');
-const cardRoutes = require('./routes/cards');
-
-const NotFoundError = require('./errors/notFoundError');
 
 const app = express();
 
@@ -31,15 +29,8 @@ async function main() {
   app.post('/signin', validationLogin, login);
   app.post('/signup', validationCreateUser, createUser);
 
-  app.use(auth); // все роуты ниже этой строки будут защищены
-
-  app.use(userRoutes);
-  app.use(cardRoutes);
-
-  app.use((req, res, next) => {
-    next(NotFoundError('Карточка с указанным _id не найдена'));
-    // res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
-  });
+  app.use(auth);
+  app.use(routes);
 
   app.listen(PORT, () => {
     // Если всё работает, консоль покажет, какой порт приложение слушает
