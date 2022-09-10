@@ -6,6 +6,8 @@ const {
   validationLogin,
 } = require('./middlewares/validations');
 
+const errorHandler = require('./middlewares/errorHandler');
+
 const { createUser, login } = require('./controllers/users');
 
 const routes = require('./routes');
@@ -28,6 +30,13 @@ async function main() {
 
   app.use(express.json());
 
+  // app.use((req, res, next) => {
+  //   req.user = {
+  //     _id: '631397f2319c4c2e38ca4610',
+  //   };
+  //   next();
+  // });
+
   app.post('/signin', validationLogin, login);
   app.post('/signup', validationCreateUser, createUser);
 
@@ -35,6 +44,7 @@ async function main() {
 
   app.use(routes);
   app.use(errors());
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     // Если всё работает, консоль покажет, какой порт приложение слушает

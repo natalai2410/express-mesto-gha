@@ -10,7 +10,7 @@ const {
 // цекнтрализованная  обработка  ошибок
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
-const AuthError = require('../errors/authError');
+// const AuthError = require('../errors/authError');
 const ConflictError = require('../errors/conflictError');
 
 // GET /users — возвращает всех пользователей
@@ -27,6 +27,7 @@ const getUsers = (req, res, next) => {
 
 // GET /users/:userId - возвращает пользователя по _id
 const getUser = (req, res, next) => {
+  console.log(req.params.userId);
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -118,10 +119,7 @@ const login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     })
-    .catch(() => {
-    // возвращаем ошибку аутентификации
-      next(new AuthError('Ошибка аутентификации'));
-    });
+    .catch(next);
 };
 
 // GET /users/me - возвращает информацию о текущем пользователе
