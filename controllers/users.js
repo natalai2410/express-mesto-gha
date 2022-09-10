@@ -4,13 +4,14 @@ const jwt = require('jsonwebtoken'); // импортируем модуль json
 const User = require('../models/user');
 
 const {
-  CAST_ERROR, REQUEST_OK, CONFLICT_ERROR,
+  CAST_ERROR, REQUEST_OK,
 } = require('../errors/errors');
 
 // цекнтрализованная  обработка  ошибок
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
 const AuthError = require('../errors/authError');
+const ConflictError = require('../errors/conflictError');
 
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res, next) => {
@@ -94,20 +95,15 @@ const createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => User.create({
     name, about, avatar, email, password: hash,
   })
-    .then((user) => res.send({
-      name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+    .then(() => {
+      res.send({
+        name, about, avatar, email,
+      });
     })
-      // eslint-disable-next-line consistent-return
-      .catch((err) => {
-        if (err.name === 'ValidationError') {
-          next(new ValidationError('Переданы некорректные данные'));
-        } else { return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' }); }
-        // eslint-disable-next-line consistent-return
-      })).catch((err) => {
+    .catch((err) => {
       if (err.code === 11000) {
-        return res.status(CONFLICT_ERROR).send({ message: 'Пользователь с таким email уже существует' });
-        // next(new ConflictError('Пользователь с таким email уже существует'));
-      } return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+        next(new ConflictError('Пользователь с таким email уже существует'));
+      }
     }));
 };
 
@@ -115,18 +111,15 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   // ищем пользователя в  БД
-  return User.findUserByCredentials(email, password)
+  User.findUserByCredentials(email, password)
     .then((user) => {
-      console.log(user);
       // Методу sign мы передали два аргумента: пейлоуд токена и секретный ключ подписи:
-      const token = jwt.sign({ _id: user._id }, 'yandex-praktikum', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, 'super-secret_key', { expiresIn: '7d' });
       // вернём токен
       res.send({ token });
     })
-    .catch((err) => {
+    .catch(() => {
     // возвращаем ошибку аутентификации
-      console.log(err.name);
-      console.log(err.code);
       next(new AuthError('Ошибка аутентификации'));
     });
 };
