@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken'); // импортируем модуль json
 const User = require('../models/user');
 
 const {
-  CAST_ERROR, REQUEST_OK,
+  CAST_ERROR, REQUEST_OK, CONFLICT_ERROR,
 } = require('../errors/errors');
 
 // цекнтрализованная  обработка  ошибок
@@ -106,8 +106,9 @@ const createUser = (req, res, next) => {
         // eslint-disable-next-line consistent-return
       })).catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
-      } else { return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' }); }
+        return res.status(CONFLICT_ERROR).send({ message: 'Пользователь с таким email уже существует' });
+        // next(new ConflictError('Пользователь с таким email уже существует'));
+      } return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     }));
 };
 
