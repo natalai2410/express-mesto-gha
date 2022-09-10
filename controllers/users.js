@@ -117,13 +117,16 @@ const login = (req, res, next) => {
   // ищем пользователя в  БД
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      console.log(user);
       // Методу sign мы передали два аргумента: пейлоуд токена и секретный ключ подписи:
       const token = jwt.sign({ _id: user._id }, 'yandex-praktikum', { expiresIn: '7d' });
       // вернём токен
       res.send({ token });
     })
-    .catch(() => {
+    .catch((err) => {
     // возвращаем ошибку аутентификации
+      console.log(err.name);
+      console.log(err.code);
       next(new AuthError('Ошибка аутентификации'));
     });
 };
