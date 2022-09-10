@@ -11,7 +11,7 @@ const {
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
 const AuthError = require('../errors/authError');
-const ConflictError = require('../errors/conflictError');
+// const ConflictError = require('../errors/conflictError');
 
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res, next) => {
