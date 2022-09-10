@@ -7,7 +7,6 @@ const {
 
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
-const forbiddenError = require('../errors/forbiddenError');
 
 const getCards = (req, res, next) => {
   Card.find({})
