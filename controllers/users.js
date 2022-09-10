@@ -11,7 +11,6 @@ const {
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
 const AuthError = require('../errors/authError');
-// const ConflictError = require('../errors/conflictError');
 
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res, next) => {
@@ -112,7 +111,7 @@ const createUser = (req, res, next) => {
     }));
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   // ищем пользователя в  БД
   return User.findUserByCredentials(email, password)
@@ -121,11 +120,12 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, 'yandex-praktikum', { expiresIn: '7d' });
       // вернём токен
       res.send({ token });
-      // res.send({ message: 'Всё верно!' });
     })
     .catch(() => {
+      // console.log(err.code);
       // возвращаем ошибку аутентификации
-      throw new AuthError('Ошибка аутентификации');
+      // res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+      next(new AuthError('Ошибка аутентификации'));
     });
 };
 
