@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 
 const isEmail = require('validator/lib/isEmail');
+const AuthError = require('../errors/authError');
 
 // создаем схему и модель для пользователя:
 const userSchema = new mongoose.Schema(
@@ -50,17 +51,17 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        return Promise.reject(new AuthError('Неправильные почта или пароль'));
       }
       // нашёлся — сравниваем хеши
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            return Promise.reject(new AuthError('Неправильные почта или пароль'));
           }
           return user; // теперь user доступен
         });
-    }).catch((err) => { console.log(err.code); });
+    });
 };
 
 // создаём модель и экспортируем её
