@@ -27,13 +27,12 @@ async function main() {
   });
 
   app.use(express.json());
+  app.use(auth);
 
   app.post('/signin', validationLogin, login);
   app.post('/signup', validationCreateUser, createUser);
 
-  app.use(auth);
   app.use(routes);
-  //
   app.use(errors());
 
   app.listen(PORT, () => {

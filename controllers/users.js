@@ -113,6 +113,7 @@ const createUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
+
   // ищем пользователя в  БД
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -122,8 +123,7 @@ const login = (req, res, next) => {
       res.send({ token });
     })
     .catch(() => {
-      // возвращаем ошибку аутентификации
-      res.status(401).send({ message: 'Ошибка аутентификации' });
+    // возвращаем ошибку аутентификации
       next(new AuthError('Ошибка аутентификации'));
     });
 };
