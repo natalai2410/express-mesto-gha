@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 
-const isEmail = require('validator/lib/isEmail');
+ const isEmail = require('validator/lib/isEmail');
 
 // создаем схему и модель для пользователя:
 const userSchema = new mongoose.Schema({
@@ -29,9 +29,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    // validate: {
-    //   validator: (email) => isEmail(email),
-    // },
+    validate: {
+      validator: (email) => isEmail(email),
+    },
   },
   password: {
     type: String,
