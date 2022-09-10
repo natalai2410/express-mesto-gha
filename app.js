@@ -14,6 +14,8 @@ const routes = require('./routes');
 const { PORT = 3000 } = process.env;
 // eslint-disable-next-line import/order
 const mongoose = require('mongoose');
+// eslint-disable-next-line import/order
+const { errors } = require('celebrate');
 
 const app = express();
 
@@ -31,6 +33,8 @@ async function main() {
 
   app.use(auth);
   app.use(routes);
+  //
+  app.use(errors());
 
   app.listen(PORT, () => {
     // Если всё работает, консоль покажет, какой порт приложение слушает
