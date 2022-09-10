@@ -10,6 +10,7 @@ const {
 // цекнтрализованная  обработка  ошибок
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
+const AuthError = require('../errors/authError');
 
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res, next) => {
@@ -123,6 +124,7 @@ const login = (req, res, next) => {
     .catch(() => {
       // возвращаем ошибку аутентификации
       res.status(401).send({ message: 'Ошибка аутентификации' });
+      next(new AuthError('Ошибка аутентификации'));
     });
 };
 
