@@ -141,19 +141,6 @@ const getCurrentUser = (req, res, next) => {
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
-
-  // User.findById(req.user._id).then((user) => {
-  //   if (!user) {
-  //     throw new NotFoundError('Пользователь по указанному _id не найден');
-  //   }
-  //   return res.status(REQUEST_OK).send(user);
-  // })
-  //   .catch((err) => {
-  //     if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
-  //       next(new ValidationError('Переданы некорректные данные пользователя'));
-  //     }
-  //     return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-  //   });
 };
 
 module.exports = {

@@ -76,19 +76,20 @@ const likeCard = (req, res, next) => {
 
 // DELETE /cards/:cardId/likes — убрать лайк с  карточки
 const dislikeCard = (req, res, next) => {
+  const { id } = req.params;
   Card.findByIdAndUpdate(
-    req.params.id,
+    id,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   ).then((card) => {
     if (!card) {
-      throw new NotFoundError('Карточка с указанным _id не найдена');
+      return next(new NotFoundError('Карточка с указанным _id не найдена'));
     }
-    return res.status(REQUEST_OK).send(card);
+    return res.send(card);
   })
     .catch((err) => {
       if ((err.name === 'ValidationError') || (err.kind === 'ObjectId')) {
-        next(new ValidationError('Переданы некорректные данные для снятия лайка'));
+        return next(new ValidationError('Переданы некорректные данные для постановки лайка'));
       }
       return next(new ServerError('Произошла ошибка'));
     });
