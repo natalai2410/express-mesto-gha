@@ -3,13 +3,15 @@ const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken'); // импортируем модуль jsonwebtoken
 const User = require('../models/user');
 
-const { REQUEST_OK } = require('../errors/errors');
+const {
+  CAST_ERROR, REQUEST_OK,
+} = require('../errors/errors');
 
 // цекнтрализованная  обработка  ошибок
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
+// const AuthError = require('../errors/authError');
 const ConflictError = require('../errors/conflictError');
-const ServerError = require('../errors/serverError');
 
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res, next) => {
@@ -19,7 +21,7 @@ const getUsers = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные пользователя'));
       }
-      return next(new ServerError('Произошла ошибка'))
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -33,6 +35,19 @@ const getUser = (req, res, next) => {
     return res.status(REQUEST_OK).send(user);
   })
     .catch((err) => next(err));
+  // User.findById(req.params.userId)
+  //   .then((user) => {
+  //     if (!user) {
+  //       throw new NotFoundError('Пользователь по указанному _id не найден');
+  //     }
+  //     return res.status(REQUEST_OK).send(user);
+  //   })
+  //   .catch((err) => {
+  //     if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
+  //       next(new ValidationError('Переданы некорректные данные пользователя'));
+  //     }
+  //     return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+  //   });
 };
 
 // PATCH /users/me — обновляет профиль
@@ -53,7 +68,7 @@ const updateUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
       }
-      return next(new ServerError('Произошла ошибка'))
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -74,7 +89,7 @@ const updateAvatar = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
       }
-      return next(new ServerError('Произошла ошибка'));
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -134,7 +149,7 @@ const getCurrentUser = (req, res, next) => {
       if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные пользователя'));
       }
-      return next(new ServerError('Произошла ошибка'))
+      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
 };
 
