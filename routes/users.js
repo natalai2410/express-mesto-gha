@@ -13,6 +13,9 @@ const {
   validationUpdateUser,
   validationUpdateAvatar,
 } = require('../middlewares/validations');
+const auth = require('../middlewares/auth');
+
+userRoutes.use(auth);
 
 userRoutes.get('/users', getUsers);
 userRoutes.get('/users/:userId', validationUserId, getUser);

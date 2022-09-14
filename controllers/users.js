@@ -89,16 +89,20 @@ const updateAvatar = (req, res, next) => {
 // POST /users — создаёт пользователя
 const createUser = (req, res, next) => {
   const {
-    name, about, avatar, email,
+    name,
+    about,
+    avatar,
+    email,
   } = req.body;
 
   // хешируем пароль
   bcrypt.hash(req.body.password, 10).then((hash) => User.create({
     name, about, avatar, email, password: hash,
   })
-    .then(() => {
+    .then((user) => {
       res.send({
-        name, about, avatar, email,
+        //  name, about, avatar, email,
+        data: user,
       });
     })
     .catch((err) => {
@@ -116,6 +120,11 @@ const login = (req, res, next) => {
     .then((user) => {
       // Методу sign мы передали два аргумента: пейлоуд токена и секретный ключ подписи:
       const token = jwt.sign({ _id: user._id }, 'super-secret_key', { expiresIn: '7d' });
+      res.cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+        sameSite: true,
+      });
       // вернём токен
       res.send({ token });
     })

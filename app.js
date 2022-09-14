@@ -18,6 +18,8 @@ const { PORT = 3000 } = process.env;
 const mongoose = require('mongoose');
 // eslint-disable-next-line import/order
 const { errors } = require('celebrate');
+// eslint-disable-next-line import/order
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -29,20 +31,13 @@ async function main() {
   });
 
   app.use(express.json());
-
-  // app.use((req, res, next) => {
-  //   req.user = {
-  //     _id: '631397f2319c4c2e38ca4610',
-  //   };
-  //   next();
-  // });
+  app.use(cookieParser());
 
   app.post('/signin', validationLogin, login);
   app.post('/signup', validationCreateUser, createUser);
 
-  app.use(auth);
-
   app.use(routes);
+
   app.use(errors());
   app.use(errorHandler);
 
