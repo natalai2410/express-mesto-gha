@@ -1,16 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-// const isUrl = require('validator/lib/isURL');
 const urlRegex = /^https?:\/\/(www\.)?[\da-z.-]+\.[a-z]{2,}([/\S.-]*)/;
-// const validationError = require('../errors/validationError');
-
-// const validationUrl = (url) => {
-//   const validate = isUrl(url);
-//   if (validate) {
-//     return url;
-//   }
-//   // eslint-disable-next-line new-cap
-//   throw new validationError('Некорректный адрес URL');
-// };
 
 const validationCreateUser = celebrate({
   body: Joi.object().keys({

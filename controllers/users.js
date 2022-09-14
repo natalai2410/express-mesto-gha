@@ -3,15 +3,13 @@ const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken'); // импортируем модуль jsonwebtoken
 const User = require('../models/user');
 
-const {
-  CAST_ERROR, REQUEST_OK,
-} = require('../errors/errors');
+const { REQUEST_OK } = require('../errors/errors');
 
 // цекнтрализованная  обработка  ошибок
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
-// const AuthError = require('../errors/authError');
 const ConflictError = require('../errors/conflictError');
+const ServerError = require('../errors/serverError');
 
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res, next) => {
@@ -21,7 +19,7 @@ const getUsers = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные пользователя'));
       }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+      return next(new ServerError('Произошла ошибка'));
     });
 };
 
@@ -55,7 +53,7 @@ const updateUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
       }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+      return next(new ServerError('Произошла ошибка'));
     });
 };
 
@@ -76,7 +74,7 @@ const updateAvatar = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
       }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+      return next(new ServerError('Произошла ошибка'));
     });
 };
 
@@ -139,7 +137,7 @@ const getCurrentUser = (req, res, next) => {
       if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
       }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+      return next(new ServerError('Произошла ошибка'));
     });
 };
 
