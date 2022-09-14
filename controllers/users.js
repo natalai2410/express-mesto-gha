@@ -126,18 +126,34 @@ const login = (req, res, next) => {
 
 // GET /users/me - возвращает информацию о текущем пользователе
 const getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id).then((user) => {
-    if (!user) {
-      throw new NotFoundError('Пользователь по указанному _id не найден');
-    }
-    return res.status(REQUEST_OK).send(user);
-  })
+  const { _id } = req.user;
+  console.log(req.user);
+  User.findById(_id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь по указанному _id не найден');
+      }
+      return res.status(REQUEST_OK).send(user);
+    })
     .catch((err) => {
       if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные пользователя'));
+        next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
       }
       return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
     });
+
+  // User.findById(req.user._id).then((user) => {
+  //   if (!user) {
+  //     throw new NotFoundError('Пользователь по указанному _id не найден');
+  //   }
+  //   return res.status(REQUEST_OK).send(user);
+  // })
+  //   .catch((err) => {
+  //     if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
+  //       next(new ValidationError('Переданы некорректные данные пользователя'));
+  //     }
+  //     return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
+  //   });
 };
 
 module.exports = {

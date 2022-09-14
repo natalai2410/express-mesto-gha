@@ -18,11 +18,12 @@ const auth = require('../middlewares/auth');
 userRoutes.use(auth);
 
 userRoutes.get('/users', getUsers);
+userRoutes.get('/users/me', getCurrentUser);
+
 userRoutes.get('/users/:userId', validationUserId, getUser);
 
 userRoutes.patch('/users/me', validationUpdateUser, updateUser);
 userRoutes.patch('/users/me/avatar', validationUpdateAvatar, updateAvatar);
 
-userRoutes.get('/users/me', getCurrentUser);
 
 module.exports = userRoutes;
