@@ -34,12 +34,7 @@ const getUser = (req, res, next) => {
       }
       return res.status(REQUEST_OK).send(user);
     })
-    .catch((err) => {
-      if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные пользователя'));
-      }
-      return res.status(CAST_ERROR).send({ message: 'Произошла ошибка' });
-    });
+    .catch((err) => next(err));
 };
 
 // PATCH /users/me — обновляет профиль
