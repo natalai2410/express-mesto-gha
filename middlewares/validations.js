@@ -1,4 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
+
 const urlRegex = /^https?:\/\/(www\.)?[\da-z.-]+\.[a-z]{2,}([/\S.-]*)/;
 
 const validationCreateUser = celebrate({
