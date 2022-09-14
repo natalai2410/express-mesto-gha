@@ -14,6 +14,7 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 // eslint-disable-next-line import/order
 const cookieParser = require('cookie-parser');
+const NotFoundError = require('./errors/notFoundError');
 
 const app = express();
 
@@ -31,6 +32,10 @@ async function main() {
   app.post('/signup', validationCreateUser, createUser);
 
   app.use(routes);
+
+  app.use((req, res, next) => {
+    next(new NotFoundError('Страница не найдена'));
+  });
 
   app.use(errors());
   app.use(errorHandler);

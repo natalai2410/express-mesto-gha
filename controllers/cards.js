@@ -6,6 +6,7 @@ const { REQUEST_OK, CREATE_OK } = require('../errors/errors');
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
 const ServerError = require('../errors/serverError');
+const forbiddenError = require('../errors/forbiddenError');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -45,7 +46,8 @@ const deleteCard = (req, res, next) => {
       if (card.owner.toString() === req.user._id) {
         Card.findByIdAndRemove(id).then(() => res.status(REQUEST_OK).send(card));
       } else {
-        next(new ValidationError('Переданы некорректные данные удаляемой карточки'));
+        // eslint-disable-next-line new-cap
+        next(new forbiddenError('Отказано в доступе'));
       }
     })
     .catch(next);
@@ -70,23 +72,6 @@ const likeCard = (req, res, next) => {
       }
       return next(new ServerError('Произошла ошибка'));
     });
-
-  // Card.findByIdAndUpdate(
-  //   req.params.id,
-  //   { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-  //   { new: true },
-  // ).then((card) => {
-  //   if (!card) {
-  //     return next(NotFoundError('Карточка с указанным _id не найдена'));
-  //   }
-  //   return res.status(REQUEST_OK).send(card);
-  // })
-  //   .catch((err) => {
-  //     if ((err.name === 'ValidationError') || (err.kind === 'ObjectId')) {
-  //       return next(new ValidationError('Переданы некорректные данные для постановки лайка'));
-  //     }
-  //     return next(new ServerError('Произошла ошибка'));
-  //   });
 };
 
 // DELETE /cards/:cardId/likes — убрать лайк с  карточки
