@@ -1,17 +1,11 @@
 const express = require('express');
-const auth = require('./middlewares/auth');
-
 const {
   validationCreateUser,
   validationLogin,
 } = require('./middlewares/validations');
-
 const errorHandler = require('./middlewares/errorHandler');
-
 const { createUser, login } = require('./controllers/users');
-
 const routes = require('./routes');
-
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 // eslint-disable-next-line import/order
