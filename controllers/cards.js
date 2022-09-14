@@ -53,15 +53,16 @@ const deleteCard = (req, res, next) => {
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
 const likeCard = (req, res, next) => {
+  const { id } = req.params;
   Card.findByIdAndUpdate(
-    req.params.id,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    id,
+    { $addToSet: { likes: id } }, // добавить _id в массив, если его там нет
     { new: true },
   ).then((card) => {
     if (!card) {
-      return next(NotFoundError('Карточка с указанным _id не найдена'));
+      return next(new NotFoundError('Карточка с указанным _id не найдена'));
     }
-    return res.status(REQUEST_OK).send(card);
+    return res.send(card);
   })
     .catch((err) => {
       if ((err.name === 'ValidationError') || (err.kind === 'ObjectId')) {
@@ -69,6 +70,23 @@ const likeCard = (req, res, next) => {
       }
       return next(new ServerError('Произошла ошибка'));
     });
+
+  // Card.findByIdAndUpdate(
+  //   req.params.id,
+  //   { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+  //   { new: true },
+  // ).then((card) => {
+  //   if (!card) {
+  //     return next(NotFoundError('Карточка с указанным _id не найдена'));
+  //   }
+  //   return res.status(REQUEST_OK).send(card);
+  // })
+  //   .catch((err) => {
+  //     if ((err.name === 'ValidationError') || (err.kind === 'ObjectId')) {
+  //       return next(new ValidationError('Переданы некорректные данные для постановки лайка'));
+  //     }
+  //     return next(new ServerError('Произошла ошибка'));
+  //   });
 };
 
 // DELETE /cards/:cardId/likes — убрать лайк с  карточки

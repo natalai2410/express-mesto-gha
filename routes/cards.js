@@ -14,7 +14,8 @@ const auth = require('../middlewares/auth');
 cardRoutes.use(auth);
 
 cardRoutes.get('/cards', getCards);
-cardRoutes.post('/cards/', validationCreateCard, createCard);
+cardRoutes.post('/cards', validationCreateCard, createCard);
+
 cardRoutes.delete('/cards/:id', validationCardId, deleteCard);
 
 cardRoutes.put('/cards/:id/likes', validationCardId, likeCard);
