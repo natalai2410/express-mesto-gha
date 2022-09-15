@@ -81,30 +81,34 @@ const updateAvatar = (req, res, next) => {
 // POST /users — создаёт пользователя
 const createUser = (req, res, next) => {
   const {
-    name,
-    about,
-    avatar,
-    email,
+    name, about, avatar, _id, email, password,
   } = req.body;
-
-  // хешируем пароль
-  bcrypt.hash(req.body.password, 10).then((hash) => User.create({
-    name, about, avatar, email, password: hash,
-  })
-    .then(() => {
-      res.send({
-        name, about, avatar, email,
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      const user = new User({
+        name,
+        about,
+        avatar,
+        _id,
+        email,
+        password: hash,
       });
+      User.create({
+        name, about, avatar, email, password: hash,
+      })
+        .then(() => {
+          res.send(user);
+        // eslint-disable-next-line consistent-return
+        }).catch((err) => {
+          if (err.code === 11000) {
+            return next(new ConflictError('Пользователь с таким email уже существует'));
+          }
+          if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
+            return next(new ValidationError('Некорректный запрос'));
+          }
+        });
     })
-    // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
-        return next(new ValidationError('Переданы некорректные данные при создании пользователя'));
-      }
-      if (err.code === 11000) {
-        return next(new ConflictError(('Пользователь с таким email уже существует')));
-      }
-    }));
+    .catch(() => next(new ServerError('Произошла ошибка')));
 };
 
 const login = (req, res, next) => {
