@@ -98,10 +98,13 @@ const createUser = (req, res, next) => {
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
+      if ((err.kind === 'ObjectId') || (err.name === 'ValidationError')) {
+        return next(new ValidationError('Переданы некорректные данные при создании пользователя'));
+      }
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
-      } else next(err);
-    }));
+        return next(new ConflictError(('Пользователь с таким email уже существует')));
+      }
+    })).catch(next);
 };
 
 const login = (req, res, next) => {
