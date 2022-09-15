@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 
 const isEmail = require('validator/lib/isEmail');
-const AuthError = require('../errors/authError');
 const isUrl = require('validator/lib/isURL');
+const AuthError = require('../errors/authError');
 
 // создаем схему и модель для пользователя:
 const userSchema = new mongoose.Schema(

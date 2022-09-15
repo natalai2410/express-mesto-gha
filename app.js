@@ -15,7 +15,6 @@ const { errors } = require('celebrate');
 // eslint-disable-next-line import/order
 const cookieParser = require('cookie-parser');
 
-
 const app = express();
 
 // подключаемся к серверу mongo
