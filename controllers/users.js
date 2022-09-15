@@ -14,7 +14,7 @@ const ServerError = require('../errors/serverError');
 // GET /users — возвращает всех пользователей
 const getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(REQUEST_OK).send(users))
+    .then((users) => res.send(users))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные пользователя'));
@@ -51,7 +51,7 @@ const updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
+        return next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
       }
       return next(new ServerError('Произошла ошибка'));
     });
@@ -72,7 +72,7 @@ const updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
+        return next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
       }
       return next(new ServerError('Произошла ошибка'));
     });
@@ -96,10 +96,13 @@ const createUser = (req, res, next) => {
         name, about, avatar, email,
       });
     })
+    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
-      }
+      } else if (err.name === 'ValidationError') {
+        return next(new ValidationError('Переданы некорректные данные при создании пользователя'));
+      } else { next(err); }
     }));
 };
 
@@ -134,8 +137,8 @@ const getCurrentUser = (req, res, next) => {
       return res.status(REQUEST_OK).send(user);
     })
     .catch((err) => {
-      if ((err.kind === 'ObjectId') || err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
+      if (err.kind === 'ObjectId') {
+        next(new ValidationError('Переданы некорректные данные'));
       }
       return next(new ServerError('Произошла ошибка'));
     });

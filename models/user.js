@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs'); // импортируем bcrypt
 
 const isEmail = require('validator/lib/isEmail');
 const AuthError = require('../errors/authError');
+const isUrl = require('validator/lib/isURL');
 
 // создаем схему и модель для пользователя:
 const userSchema = new mongoose.Schema(
@@ -23,6 +24,10 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
       default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+      validate: {
+        validator: (url) => isUrl(url),
+        message: 'Некорректный адрес URL',
+      },
     },
     email: {
       type: String,
@@ -30,6 +35,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       validate: {
         validator: (email) => isEmail(email),
+        message: 'Некорректный e-mail',
       },
     },
     password: {

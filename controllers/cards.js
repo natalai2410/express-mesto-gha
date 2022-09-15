@@ -11,12 +11,7 @@ const forbiddenError = require('../errors/forbiddenError');
 const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards.map((element) => element)))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные карточки'));
-      }
-      return next(new ServerError('Произошла ошибка'));
-    });
+    .catch(next);
 };
 
 const createCard = (req, res, next) => {
@@ -29,7 +24,7 @@ const createCard = (req, res, next) => {
     .catch((err) => {
       console.log(err.name);
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные при создании карточк'));
+        return next(new ValidationError('Переданы некорректные данные при создании карточк'));
       }
       return next(new ServerError('Произошла ошибка'));
     });
@@ -44,7 +39,7 @@ const deleteCard = (req, res, next) => {
     })
     .then((card) => {
       if (card.owner.toString() === req.user._id) {
-        Card.findByIdAndRemove(id).then(() => res.status(REQUEST_OK).send(card));
+        Card.findByIdAndRemove(id).then(() => res.status(REQUEST_OK).send(card)).catch(next);
       } else {
         // eslint-disable-next-line new-cap
         next(new forbiddenError('Отказано в доступе'));
@@ -58,7 +53,7 @@ const likeCard = (req, res, next) => {
   const { id } = req.params;
   Card.findByIdAndUpdate(
     id,
-    { $addToSet: { likes: id } }, // добавить _id в массив, если его там нет
+    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   ).then((card) => {
     if (!card) {
