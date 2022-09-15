@@ -81,15 +81,17 @@ const updateAvatar = (req, res, next) => {
 // POST /users — создаёт пользователя
 const createUser = (req, res, next) => {
   const {
-    name, about, avatar, email,
+    name,
+    about,
+    avatar,
+    email,
   } = req.body;
-  bcrypt.hash(req.body.password, 10)
-    .then((hash) => {
-      User.create({
-        name, about, avatar, email, password: hash,
-      });
-    })
-    .then((user) => res.status(201).send(user))
+  bcrypt.hash(req.body.password, 10).then((hash) => {
+    User.create({
+      name, about, avatar, email, password: hash,
+    });
+  })
+    .then(() => res.send(name, about, avatar, email))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new ValidationError('Переданы некорректные данные при создании пользователя');
