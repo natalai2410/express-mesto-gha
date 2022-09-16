@@ -15,12 +15,7 @@ const ServerError = require('../errors/serverError');
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные пользователя'));
-      }
-      return next(new ServerError('Произошла ошибка'));
-    });
+    .catch(() => next(new ServerError('Произошла ошибка')));
 };
 
 // GET /users/:userId - возвращает пользователя по _id
@@ -86,18 +81,16 @@ const createUser = (req, res, next) => {
     avatar,
     email,
   } = req.body;
-  bcrypt.hash(req.body.password, 10).then((hash) => {
-    User.create({
-      name, about, avatar, email, password: hash,
-    });
-  })
+  bcrypt.hash(req.body.password, 10).then((hash) => User.create({
+    name, about, avatar, email, password: hash,
+  }))
     .then(() => res.send(name, about, avatar, email))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные при создании пользователя');
+        next(new ValidationError('Переданы некорректные данные при создании пользователя'));
       } else if (err.code === 11000) {
-        throw new ConflictError('Пользователь с таким email уже существует');
-      }
+        next(new ConflictError('Пользователь с таким email уже существует'));
+      } else { next(err); }
     })
     .catch(next);
 };
@@ -134,7 +127,7 @@ const getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        next(new ValidationError('Переданы некорректные данные'));
+        return next(new ValidationError('Переданы некорректные данные'));
       }
       return next(new ServerError('Произошла ошибка'));
     });
