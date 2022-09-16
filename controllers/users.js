@@ -90,7 +90,9 @@ const updateAvatar = (req, res, next) => {
 //         next(new ValidationError('Переданы некорректные данные при создании пользователя'));
 //       } else if (err.code === 11000) {
 //         next(new ConflictError('Пользователь с таким email уже существует'));
-//       } else { next(err); }
+//       } else {
+//         next(err);
+//       }
 //     });
 // };
 
@@ -102,19 +104,18 @@ const createUser = (req, res, next) => {
     email,
   } = req.body;
   bcrypt.hash(req.body.password, 10).then((hash) => {
-    User.create({
+    return User.create({
       name, about, avatar, email, password: hash,
     });
   })
     .then(() => res.send(name, about, avatar, email))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные при создании пользователя');
+        next(new ValidationError('Переданы некорректные данные при создании пользователя'));
       } else if (err.code === 11000) {
-        throw new ConflictError('Пользователь с таким email уже существует');
+        next(new ConflictError('Пользователь с таким email уже существует'));
       }
-    })
-    .catch(next);
+    });
 };
 
 const login = (req, res, next) => {
