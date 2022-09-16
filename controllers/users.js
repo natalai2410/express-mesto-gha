@@ -83,15 +83,15 @@ const createUser = (req, res, next) => {
   } = req.body;
   bcrypt.hash(req.body.password, 10).then((hash) => User.create({
     name, about, avatar, email, password: hash,
-  }))
+  })
     .then(() => res.send(name, about, avatar, email))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при создании пользователя'));
       } else if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
-      } else { next(err); }
-    })
+      }  else { next(err); }
+    }))
     .catch(next);
 };
 
